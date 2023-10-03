@@ -312,17 +312,20 @@ void addRoute(struct FlightBookingService* fbs, struct Route* route) {
 
 // Функция, преназначенная для удаления маршрутов.
 void removeRoute(struct FlightBookingService* fbs, struct Route* route) {
-	// remake maybe
+	int is_found = 0;
 	if (fbs->routes_amount > 0) { 
 		Route routes[MAX_FLIGHTS_AMOUNT];
 		for (int i = 0, index = 0; i < fbs->routes_amount; ++i) {
-			if (compareRoutes(&fbs->routes[i], route) == 1) {
+			if (compareRoutes(&fbs->routes[i], route) == 1 && !is_found) {
+				printf("Маршрут успешно удален.\n");
+				is_found = 1;
 				continue;
 			}
 			memcpy(&routes[index++], &fbs->routes[i], sizeof(struct Route));
 		}
 		memcpy(fbs->routes, routes, sizeof(struct Route) * MAX_FLIGHTS_AMOUNT);
-		fbs->routes_amount--;
+		if (is_found) fbs->routes_amount--;
+		else printf("Данный маршрут не найден, удаление невозможно.\n");
 	}
 }
 
